@@ -1,13 +1,20 @@
 import React, {useCallback, useEffect, useState} from "react";
-import {ActivityIndicator, FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {ActivityIndicator, FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import Header from "../../components/Header.tsx";
 import AbstractComponent from "../../components/AbstractComponent.tsx";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Icons from "react-native-vector-icons/Ionicons";
 import {useFocusEffect} from "@react-navigation/native";
+import DeleteTable from "./DeleteTable.tsx";
+
+// Define the type for table items
+type TableItem = {
+    id: number;
+    name: string;
+};
 
 const TableScreen = ({navigation}: any) => {
-    const [table, setTable] = useState([]);
+    const [table, setTable] = useState<TableItem[]>([]);
     const [isLoading, setLoading] = useState(true);
 
     const getAPI = async () => {
@@ -32,6 +39,10 @@ const TableScreen = ({navigation}: any) => {
             getAPI();
         }, [])
     );
+
+    const onDeleteSuccess = () => {
+        getAPI(); // Refresh the table list after deletion
+    };
 
     const AddTableClick = () => {
         navigation.navigate('AddTable');
@@ -60,8 +71,8 @@ const TableScreen = ({navigation}: any) => {
                                     <TouchableOpacity onPress={() => ButtonUpdateClick(item)}>
                                         <Icon name={'update'} style={styles.icon}/>
                                     </TouchableOpacity>
-                                    <TouchableOpacity onPress={() => {}}>
-                                        <Icon name={'delete'} style={styles.icon}/>
+                                    <TouchableOpacity>
+                                        <DeleteTable tableId={item.id} onDeleteSuccess={onDeleteSuccess}/>
                                     </TouchableOpacity>
                                 </View>
                             </View>

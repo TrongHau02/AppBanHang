@@ -8,7 +8,7 @@ const AbstractComponent = ({ title, textBTN, onAddPress }: AbstractComponentProp
             {textBTN === null ?
                 null :
                 <TouchableOpacity onPress={onAddPress}>
-                    <Text style={{ color: 'black', fontSize: 20 }}>{textBTN}</Text>
+                    <Text style={{ color: 'red', fontSize: 20 }}>{textBTN}</Text>
                 </TouchableOpacity>
             }
         </View>

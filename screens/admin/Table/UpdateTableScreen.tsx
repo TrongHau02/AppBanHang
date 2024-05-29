@@ -1,7 +1,6 @@
 import React, {useState} from "react";
-import {Image, SafeAreaView, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View} from "react-native";
+import {SafeAreaView, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View} from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
-import {launchImageLibrary} from "react-native-image-picker";
 
 const UpdateTableScreen = ({route, navigation}: any) => {
     const {item} = route.params;
@@ -9,6 +8,7 @@ const UpdateTableScreen = ({route, navigation}: any) => {
     const [errorTableName, setErrorTableName] = useState("");
 
     const Submit = async () => {
+        //console.log("Submit function called"); // Log to check if function is called
         try {
             if (tableName === '') {
                 setErrorTableName("Vui lòng nhập tên bàn");
@@ -16,39 +16,39 @@ const UpdateTableScreen = ({route, navigation}: any) => {
             }
             setErrorTableName("");
 
-            // Create a FormData object to send data to the server
-            const formData = new FormData();
-            formData.append('name', tableName);
+            // Create JSON object to send data to the server
+            const data = {
+                name: tableName,
+            };
 
             // Send PUT request to the specified URL
             const response = await fetch(`http://192.168.0.105:8888/api/v1/tables/${item.id}`, {
                 method: 'PUT',
-                body: formData,
+                body: JSON.stringify(data),
                 headers: {
-                    'Content-Type': 'multipart/form-data', // Specify the data format as form data
+                    'Content-Type': 'application/json',
                 },
             });
 
             const responseData = await response.json();
 
-            // Check the response status code
             if (response.status === 200) {
                 ToastAndroid.showWithGravity(
-                    responseData.message,
+                    "Cập nhật thành công",
                     ToastAndroid.SHORT,
                     ToastAndroid.CENTER,
                 );
                 setTableName("");
                 navigation.goBack();
             } else {
-                // Handle any errors
                 ToastAndroid.showWithGravity(
-                    responseData.message,
+                    responseData.message || "Cập nhật thất bại",
                     ToastAndroid.SHORT,
                     ToastAndroid.CENTER,
                 );
             }
         } catch (error) {
+            //console.error("Error during the update request:", error);
             ToastAndroid.showWithGravity(
                 "Đã xảy ra lỗi khi gửi request",
                 ToastAndroid.SHORT,
@@ -56,6 +56,7 @@ const UpdateTableScreen = ({route, navigation}: any) => {
             );
         }
     };
+
 
     const ButtonBackClick = () => {
         navigation.goBack();

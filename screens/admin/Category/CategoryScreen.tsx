@@ -15,8 +15,14 @@ import AbstractComponent from "../../components/AbstractComponent.tsx";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import {useFocusEffect} from "@react-navigation/native";
 
+type CategoryItem = {
+    id: number;
+    name: string;
+    imageUrl: string;
+};
+
 const CategoryScreen = ({navigation}: any) => {
-    const [category, setCategory] = useState([]);
+    const [category, setCategory] = useState<CategoryItem[]>([]);
     const [isLoading, setLoading] = useState(true);
 
     const getAPI = async () => {
