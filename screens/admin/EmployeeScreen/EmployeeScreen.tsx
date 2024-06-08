@@ -5,21 +5,21 @@ import AbstractComponent from "../../components/AbstractComponent.tsx";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Icons from "react-native-vector-icons/FontAwesome";
 
-const EmployeeScreen = () => {
+const EmployeeScreen = ({navigation}: any) => {
     const [isLoading, setLoading] = useState(false);
 
     const data = [
         {id: 1, "username": "nguyenvana", "password": "123456", "fullname": "Nguyễn Văn A", "address": "Tp.Hồ Chí Minh"},
-        {id: 1, "username": "nguyenvanb", "password": "123456", "fullname": "Nguyễn Văn B", "address": "Tp.Hồ Chí Minh"},
-        {id: 1, "username": "nguyenvanc", "password": "123456", "fullname": "Nguyễn Văn C", "address": "Tp.Hồ Chí Minh"},
+        {id: 2, "username": "nguyenvanb", "password": "123456", "fullname": "Nguyễn Văn B", "address": "Tp.Hồ Chí Minh"},
+        {id: 3, "username": "nguyenvanc", "password": "123456", "fullname": "Nguyễn Văn C", "address": "Tp.Hồ Chí Minh"},
     ]
 
     const AddEmployee = () => {
-
+        navigation.navigate('AddEmployee');
     };
 
-    const EmployeeUpdate = ({item}: any) => {
-
+    const EmployeeUpdate = (item: any) => {
+        navigation.navigate('UpdateEmployee', {item})
     }
 
     const EmployeeDelete = ({id}: any) => {
