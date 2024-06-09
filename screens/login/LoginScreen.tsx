@@ -16,6 +16,7 @@ import Icon from 'react-native-vector-icons/Fontisto';
 import CheckBox from '@react-native-community/checkbox';
 import axios from "axios";
 import Toast from "react-native-toast-message";
+import CONFIG from "../../config/config.ts";
 
 const LoginScrenn = ({navigation}: any) => {
     const [isCheck, setIsCheck] = useState(false);
@@ -42,7 +43,7 @@ const LoginScrenn = ({navigation}: any) => {
         formData.password === '' ? setErrorPassword('Vui lòng nhập Password') : setErrorPassword('');
 
         try {
-            const response = await axios.post('http://192.168.0.105:8888/api/v1/user/login', formData);
+            const response = await axios.post(`${CONFIG.API_BASE_URL}/user/login`, formData);
             if (response.status === 200) {
                 // Xử lý đăng nhập thành công
                 ToastAndroid.showWithGravity(

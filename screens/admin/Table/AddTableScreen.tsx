@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import axios from "axios";
+import CONFIG from "../../../config/config.ts";
 
 const AddTableScreen = ({ navigation }: any) => {
     const [tableName, setTableName] = useState("");
@@ -15,7 +16,7 @@ const AddTableScreen = ({ navigation }: any) => {
             }
             setErrorTableName("");
 
-            const response = await fetch('http://192.168.0.105:8888/api/v1/tables', {
+            const response = await fetch(`${CONFIG.API_BASE_URL}/tables`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

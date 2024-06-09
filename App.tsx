@@ -1,13 +1,11 @@
 import React from 'react';
 import {StyleSheet} from "react-native";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
-import CategoryScreen from "./screens/admin/Category/CategoryScreen.tsx";
 import AddCategoryScreen from "./screens/admin/Category/AddCategoryScreen.tsx";
 import AdminHomeScreen from "./screens/admin/HomeScreen/HomeScreen.tsx";
 import HomeScreen from "./screens/home/HomeScreen.tsx";
 import {NavigationContainer} from "@react-navigation/native";
 import RegisterScreen from "./screens/register/RegisterScreen.tsx";
-import AddProductScreen from "./screens/admin/AddProductScreen.tsx";
 import LoginScreen from "./screens/login/LoginScreen.tsx";
 
 /*const Home = ({navigation}: any) => {
@@ -99,8 +97,6 @@ const App = () => {
             <Stack.Navigator initialRouteName="LoginScreen">
                 <Stack.Screen name={"HomeScreen"} component={HomeScreen} options={{headerShown: false}}/>
                 <Stack.Screen name={"AdminHomeScreen"} component={AdminHomeScreen} options={{headerShown: false}}/>
-                <Stack.Screen name={"AddCategoryScreen"} component={AddCategoryScreen} options={{headerShown: false}}/>
-                <Stack.Screen name={"AddProductScreen"} component={AddProductScreen} options={{headerShown: false}}/>
                 <Stack.Screen name={"RegisterScreen"} component={RegisterScreen} options={{headerShown: false}}/>
                 <Stack.Screen name={"LoginScreen"} component={LoginScreen} options={{headerShown: false}}/>
             </Stack.Navigator>

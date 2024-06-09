@@ -14,11 +14,15 @@ import UpdateCategoryScreen from "../Category/UpdateCategoryScreen.tsx";
 import TableScreen from "../Table/TableScreen.tsx";
 import AddTableScreen from "../Table/AddTableScreen.tsx";
 import UpdateTableScreen from "../Table/UpdateTableScreen.tsx";
+import AddDishScreen from "../ProductScreen/AddDishScreen.tsx";
+import {UpdateEmployeeScreen} from "../EmployeeScreen/UpdateEmployeeScreen.tsx";
+import {AddEmployeeScreen} from "../EmployeeScreen/AddEmployeeScreen.tsx";
+import {UpdateInformationScreen} from "../InfomationScreen/UpdateInformationScreen.tsx";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const TabNavigator = () => {
+const TabNavigator = ({userData}: any) => {
     return (
         <Tab.Navigator
             screenOptions={({route}) => ({
@@ -50,21 +54,32 @@ const TabNavigator = () => {
             <Tab.Screen name={"Category"} component={CategoryScreen}/>
             <Tab.Screen name={"Product"} component={ProductScreen}/>
             <Tab.Screen name={"Employee"} component={EmployeeScreen}/>
-            <Tab.Screen name={"Information"} component={InformationScreen}/>
+            {/*<Tab.Screen name={"Information"} component={InformationScreen}/>*/}
+            <Tab.Screen name="Information">
+                {props => <InformationScreen {...props} userData={userData} />}
+            </Tab.Screen>
         </Tab.Navigator>
     )
 }
 
-const AdminHomeScreen = () => {
+const AdminHomeScreen = ({route}: any) => {
+    const { userData } = route.params;
 
     return (
         <>
             <Stack.Navigator initialRouteName="TabNavigator">
-                <Stack.Screen name={"TabNavigator"} component={TabNavigator} options={{headerShown: false}}/>
+                {/*<Stack.Screen name={"TabNavigator"} component={TabNavigator} options={{headerShown: false}}/>*/}
+                <Stack.Screen name="TabNavigator" options={{ headerShown: false }}>
+                    {props => <TabNavigator {...props} userData={userData} />}
+                </Stack.Screen>
                 <Stack.Screen name={"AddCategory"} component={AddCategoryScreen} options={{headerShown: false}}/>
                 <Stack.Screen name={"AddTable"} component={AddTableScreen} options={{headerShown: false}}/>
+                <Stack.Screen name={"AddDish"} component={AddDishScreen} options={{headerShown: false}}/>
+                <Stack.Screen name={"AddEmployee"} component={AddEmployeeScreen} options={{headerShown: false}}/>
+                <Stack.Screen name={"UpdateEmployee"} component={UpdateEmployeeScreen} options={{headerShown: false}}/>
                 <Stack.Screen name={"UpdateCategory"} component={UpdateCategoryScreen} options={{headerShown: false}}/>
                 <Stack.Screen name={"UpdateTable"} component={UpdateTableScreen} options={{headerShown: false}}/>
+                <Stack.Screen name={"UpdateInformation"} component={UpdateInformationScreen} options={{headerShown: false}}/>
             </Stack.Navigator>
         </>
     )

@@ -6,6 +6,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Icons from "react-native-vector-icons/Ionicons";
 import {useFocusEffect} from "@react-navigation/native";
 import DeleteTable from "./DeleteTable.tsx";
+import CONFIG from "../../../config/config.ts";
 
 // Define the type for table items
 type TableItem = {
@@ -19,7 +20,7 @@ const TableScreen = ({navigation}: any) => {
 
     const getAPI = async () => {
         try {
-            const response = await fetch('http://192.168.0.105:8888/api/v1/tables');
+            const response = await fetch(`${CONFIG.API_BASE_URL}/tables`);
             const data = await response.json();
             setTable(data.data);
         } catch (error) {
@@ -55,7 +56,7 @@ const TableScreen = ({navigation}: any) => {
     return (
         <View style={styles.container}>
             <Header/>
-            <AbstractComponent title={"Danh sách bàn ăn"} textBTN={"Thêm"} onAddPress={AddTableClick}/>
+            <AbstractComponent title={"Danh sách"} textBTN={"Thêm"} onAddPress={AddTableClick}/>
             <ScrollView>
                 {isLoading ? (
                     <ActivityIndicator/>

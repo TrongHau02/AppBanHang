@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
     ActivityIndicator,
     Alert,
@@ -10,10 +10,11 @@ import {
     TouchableOpacity,
     View
 } from "react-native";
-import Header from "../../components/Header.tsx";
-import AbstractComponent from "../../components/AbstractComponent.tsx";
+import Header from "../../components/Header";
+import AbstractComponent from "../../components/AbstractComponent";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import {useFocusEffect} from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
+import CONFIG from "../../../config/config.ts";
 
 type CategoryItem = {
     id: number;
@@ -21,13 +22,13 @@ type CategoryItem = {
     imageUrl: string;
 };
 
-const CategoryScreen = ({navigation}: any) => {
+const CategoryScreen = ({ navigation }: any) => {
     const [category, setCategory] = useState<CategoryItem[]>([]);
     const [isLoading, setLoading] = useState(true);
 
     const getAPI = async () => {
         try {
-            const response = await fetch('http://192.168.0.105:8888/api/v1/categorys');
+            const response = await fetch(`${CONFIG.API_BASE_URL}/categorys`);
             const data = await response.json();
             setCategory(data.data);
         } catch (error) {
@@ -53,50 +54,65 @@ const CategoryScreen = ({navigation}: any) => {
     }
 
     const CategoryDeleteClick = async (id: number) => {
-        try {
-            const response = await fetch(`http://192.168.0.105:8888/api/v1/categorys/${id}`, {
-                method: 'DELETE',
-            });
-            const data = await response.json();
-            if (response.ok) {
-                Alert.alert("Thông báo", data.message);
-                // Cập nhật danh sách danh mục sau khi xóa thành công
-                const updatedCategories = category.filter(category => category.id !== id);
-                setCategory(updatedCategories);
-            } else {
-                Alert.alert("Thông báo", data.message);
-            }
-        } catch (error) {
-            console.log(error);
-            Alert.alert("Thông báo", "Có lỗi xảy ra!");
-        }
+        Alert.alert(
+            "Xác nhận",
+            "Bạn có chắc chắn muốn xóa danh mục này?",
+            [
+                {
+                    text: "Hủy",
+                    style: "cancel"
+                },
+                {
+                    text: "Xóa",
+                    onPress: async () => {
+                        try {
+                            const response = await fetch(`${CONFIG.API_BASE_URL}/categorys/${id}`, {
+                                method: 'DELETE',
+                            });
+                            const data = await response.json();
+                            if (response.ok) {
+                                Alert.alert("Thông báo", data.message);
+                                // Cập nhật danh sách danh mục sau khi xóa thành công
+                                const updatedCategories = category.filter(category => category.id !== id);
+                                setCategory(updatedCategories);
+                            } else {
+                                Alert.alert("Thông báo", data.message);
+                            }
+                        } catch (error) {
+                            console.log(error);
+                            Alert.alert("Thông báo", "Có lỗi xảy ra!");
+                        }
+                    }
+                }
+            ]
+        );
     };
 
     const CategoryUpdateClick = (item: any) => {
-        navigation.navigate('UpdateCategory', {item});
+        navigation.navigate('UpdateCategory', { item });
     };
 
     return (
         <View style={styles.container}>
-            <Header/>
-            <AbstractComponent title={"Danh sách thể loại món ăn"} textBTN={"Thêm"} onAddPress={AddCategory}/>
+            <Header />
+            <AbstractComponent title={"Danh sách"} textBTN={"Thêm"} onAddPress={AddCategory} />
             <ScrollView>
                 {isLoading ? (
-                    <ActivityIndicator/>
+                    <ActivityIndicator />
                 ) : (
                     <FlatList
                         scrollEnabled={false}
                         data={category}
-                        renderItem={({item}: any) => (
+                        renderItem={({ item }: any) => (
                             <View style={styles.item}>
-                                <Image source={{uri: item.imageUrl}} style={styles.image}/>
+                                <Image source={{ uri: item.imageUrl }} style={styles.image} />
                                 <Text style={styles.title}>{item.name}</Text>
                                 <View style={styles.groupBTN}>
                                     <TouchableOpacity onPress={() => CategoryUpdateClick(item)}>
-                                        <Icon name={'update'} style={styles.icon}/>
+                                        <Icon name={'update'} style={styles.icon} />
                                     </TouchableOpacity>
                                     <TouchableOpacity onPress={() => CategoryDeleteClick(item.id)}>
-                                        <Icon name={'delete'} style={styles.icon}/>
+                                        <Icon name={'delete'} style={styles.icon} />
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -136,5 +152,5 @@ const styles = StyleSheet.create({
         color: 'black'
     }
 
-})
+});
 export default CategoryScreen;

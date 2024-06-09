@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import {launchImageLibrary} from 'react-native-image-picker';
+import CONFIG from "../../../config/config.ts";
 
 const AddCategoryScreen = ({navigation}: any) => {
     const [categoryName, setCategoryName] = useState("");
@@ -57,7 +58,7 @@ const AddCategoryScreen = ({navigation}: any) => {
                 formData.append('image', {uri: imageUri, name: filename, type});
             }
             // Gửi request POST tới địa chỉ cần
-            const response = await fetch('http://192.168.0.105:8888/api/v1/categorys', {
+            const response = await fetch(`${CONFIG.API_BASE_URL}/categorys`, {
                 method: 'POST',
                 body: formData,
                 headers: {

@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {SafeAreaView, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View} from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
+import CONFIG from "../../../config/config.ts";
 
 const UpdateTableScreen = ({route, navigation}: any) => {
     const {item} = route.params;
@@ -22,7 +23,7 @@ const UpdateTableScreen = ({route, navigation}: any) => {
             };
 
             // Send PUT request to the specified URL
-            const response = await fetch(`http://192.168.0.105:8888/api/v1/tables/${item.id}`, {
+            const response = await fetch(`${CONFIG.API_BASE_URL}/tables/${item.id}`, {
                 method: 'PUT',
                 body: JSON.stringify(data),
                 headers: {

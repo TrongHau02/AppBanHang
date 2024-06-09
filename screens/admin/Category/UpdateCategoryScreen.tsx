@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Image, SafeAreaView, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { launchImageLibrary } from "react-native-image-picker";
+import CONFIG from "../../../config/config.ts";
 
 const UpdateCategoryScreen = ({ route, navigation }: any) => {
     const { item } = route.params;
@@ -43,7 +44,7 @@ const UpdateCategoryScreen = ({ route, navigation }: any) => {
             }
 
             // Send PUT request to the specified URL
-            const response = await fetch(`http://192.168.0.105:8888/api/v1/categorys/${item.id}`, {
+            const response = await fetch(`${CONFIG.API_BASE_URL}/categorys/${item.id}`, {
                 method: 'PUT',
                 body: formData,
                 headers: {
