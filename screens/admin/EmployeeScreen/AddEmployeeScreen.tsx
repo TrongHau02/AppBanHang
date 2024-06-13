@@ -1,6 +1,7 @@
 import React, {useState} from "react";
-import {Image, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {Image, SafeAreaView, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View} from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
+import CONFIG from "../../../config/config.ts";
 
 export const AddEmployeeScreen = ({navigation}: any) => {
     const [fullName, setFullName] = useState("");
@@ -11,18 +12,86 @@ export const AddEmployeeScreen = ({navigation}: any) => {
     const [errorUserName, setErrorUserName] = useState("");
     const [errorAddress, setErrorAddress] = useState("");
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const PageBack = () => {
         navigation.goBack();
     }
 
-    const Submit = () => {
+    const Submit = async () => {
+        // Clear previous errors
+        setErrorFullName("");
+        setErrorUserName("");
+        setErrorAddress("");
 
+        // Validate input
+        let isValid = true;
+        if (fullName.trim() === "") {
+            setErrorFullName("Vui lòng nhập họ tên");
+            isValid = false;
+        }
+        if (userName.trim() === "") {
+            setErrorUserName("Vui lòng nhập tài khoản");
+            isValid = false;
+        }
+        if (address.trim() === "") {
+            setErrorAddress("Vui lòng nhập địa chỉ");
+            isValid = false;
+        }
+
+        if (!isValid) {
+            return;
+        }
+
+        setIsSubmitting(true);
+
+        try {
+            const response = await fetch(`${CONFIG.API_BASE_URL}/user/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: userName,
+                    password: "123456",
+                    fullname: fullName,
+                    address: address
+                }),
+            });
+
+            const responseData = await response.json();
+
+            if (response.status === 200) {
+                ToastAndroid.showWithGravity(
+                    'Thêm nhân viên thành công',
+                    ToastAndroid.SHORT,
+                    ToastAndroid.CENTER,
+                );
+                setUsername("");
+                setFullName("");
+                setAddress("");
+            } else {
+                ToastAndroid.showWithGravity(
+                    responseData.message,
+                    ToastAndroid.SHORT,
+                    ToastAndroid.CENTER,
+                );
+            }
+        } catch (error) {
+            ToastAndroid.showWithGravity(
+                "Đã xảy ra lỗi khi gửi request",
+                ToastAndroid.SHORT,
+                ToastAndroid.CENTER,
+            );
+        } finally {
+            setIsSubmitting(false);
+        }
     }
 
     return (
         <SafeAreaView style={styles.container}>
             <TouchableOpacity style={styles.backButton} onPress={PageBack}>
-                <Icon name={"arrow-back"} style={styles.backIcon} />
+                <Icon name={"arrow-back"} style={styles.backIcon}/>
                 <Text style={styles.backButtonText}>Back</Text>
             </TouchableOpacity>
             <View style={styles.content}>
@@ -33,34 +102,43 @@ export const AddEmployeeScreen = ({navigation}: any) => {
                         <TextInput
                             style={styles.input}
                             placeholder={"Nhập vào họ tên"}
-                            // value={categoryName}
-                            onChangeText={(value) => setFullName(value)}
+                            value={fullName}
+                            onChangeText={(value) => {
+                                setFullName(value);
+                                setErrorFullName("");
+                            }}
                         />
-                        <Text style={{ color: 'red' }}>{fullName}</Text>
+                        <Text style={{color: 'red'}}>{errorFullName}</Text>
                     </View>
                     <View>
                         <Text style={styles.label}>Tài khoản:</Text>
                         <TextInput
                             style={styles.input}
                             placeholder={"Nhập vào tài khoản"}
-                            // value={categoryName}
-                            onChangeText={(value) => setUsername(value)}
+                            value={userName}
+                            onChangeText={(value) => {
+                                setUsername(value);
+                                setErrorUserName("");
+                            }}
                         />
-                        <Text style={{ color: 'red' }}>{fullName}</Text>
+                        <Text style={{color: 'red'}}>{errorUserName}</Text>
                     </View>
                     <View>
                         <Text style={styles.label}>Địa chỉ:</Text>
                         <TextInput
                             style={styles.input}
                             placeholder={"Nhập vào địa chỉ"}
-                            // value={categoryName}
-                            onChangeText={(value) => setAddress(value)}
+                            value={address}
+                            onChangeText={(value) => {
+                                setAddress(value);
+                                setErrorAddress("");
+                            }}
                         />
-                        <Text style={{ color: 'red' }}>{fullName}</Text>
+                        <Text style={{color: 'red'}}>{errorAddress}</Text>
                     </View>
                 </View>
 
-                <TouchableOpacity style={styles.btnAdd} onPress={Submit}>
+                <TouchableOpacity style={styles.btnAdd} onPress={Submit} disabled={isSubmitting}>
                     <Text style={styles.titleBTN}>Thêm</Text>
                 </TouchableOpacity>
             </View>
@@ -106,6 +184,7 @@ const styles = StyleSheet.create({
         color: 'black',
         fontSize: 16,
         width: '100%',
+        marginBottom: 10,
     },
     backButton: {
         position: 'absolute',
@@ -123,33 +202,16 @@ const styles = StyleSheet.create({
         color: '#007BFF',
         marginLeft: 5,
     },
-    imagePicker: {
-        marginTop: 20,
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%',
-        height: 200,
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 5,
-        backgroundColor: '#f9f9f9',
-    },
-    imagePickerText: {
-        color: '#007BFF',
-        fontSize: 16,
-    },
-    image: {
-        width: '100%',
-        height: '100%',
-        borderRadius: 5,
-    },
     btnAdd: {
         borderWidth: 1,
         borderRadius: 5,
         width: 100,
         height: 30,
         marginTop: 10,
-        backgroundColor: '#1bcdff'
+        backgroundColor: '#1bcdff',
+        justifyContent: 'center',
+        alignItems: 'center',
+        opacity: 0.5,
     },
     titleBTN: {
         textAlign: 'center',

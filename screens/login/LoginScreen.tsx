@@ -60,8 +60,6 @@ const LoginScrenn = ({navigation}: any) => {
                 } else if (userData.roleId === 2) {
                     navigation.navigate('HomeScreen', {userData});
                 }
-
-
             } else {
                 ToastAndroid.showWithGravity(
                     'Đăng nhập thất bại! Email hoặc Password không đúng',

@@ -1,18 +1,54 @@
-import React, {useState} from "react";
-import {ActivityIndicator, FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import React, {useCallback, useEffect, useState} from "react";
+import {
+    ActivityIndicator,
+    Alert,
+    FlatList,
+    Image,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
+} from "react-native";
 import Header from "../../components/Header.tsx";
 import AbstractComponent from "../../components/AbstractComponent.tsx";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Icons from "react-native-vector-icons/FontAwesome";
+import CONFIG from "../../../config/config.ts";
+import {useFocusEffect} from "@react-navigation/native";
 
 const EmployeeScreen = ({navigation}: any) => {
     const [isLoading, setLoading] = useState(false);
+    const [employee, setEmployee] = useState([]);
 
     const data = [
         {id: 1, "username": "nguyenvana", "password": "123456", "fullname": "Nguyễn Văn A", "address": "Tp.Hồ Chí Minh"},
         {id: 2, "username": "nguyenvanb", "password": "123456", "fullname": "Nguyễn Văn B", "address": "Tp.Hồ Chí Minh"},
         {id: 3, "username": "nguyenvanc", "password": "123456", "fullname": "Nguyễn Văn C", "address": "Tp.Hồ Chí Minh"},
     ]
+
+    const getAPI = async () => {
+        try {
+            const response = await fetch(`${CONFIG.API_BASE_URL}/user/employee`);
+            const data = await response.json();
+            setEmployee(data.data);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        getAPI();
+    }, []);
+
+    useFocusEffect(
+        useCallback(() => {
+            setLoading(true);  // Show loading indicator while fetching data
+            getAPI();
+        }, [])
+    );
 
     const AddEmployee = () => {
         navigation.navigate('AddEmployee');
@@ -22,9 +58,40 @@ const EmployeeScreen = ({navigation}: any) => {
         navigation.navigate('UpdateEmployee', {item})
     }
 
-    const EmployeeDelete = ({id}: any) => {
-
-    }
+    const EmployeeDelete = async (id: number) => {
+        Alert.alert(
+            "Xác nhận",
+            "Bạn có chắc chắn muốn xóa nhân viên này?",
+            [
+                {
+                    text: "Hủy",
+                    style: "cancel"
+                },
+                {
+                    text: "Xóa",
+                    onPress: async () => {
+                        try {
+                            const response = await fetch(`${CONFIG.API_BASE_URL}/user/${id}`, {
+                                method: 'DELETE',
+                            });
+                            const data = await response.json();
+                            if (response.ok) { // Check if response status is 200
+                                Alert.alert("Thông báo", "Xóa nhân viên thành công");
+                                // Cập nhật danh sách nhân viên sau khi xóa thành công
+                                const updatedEmployee = employee.filter(employee => employee.id !== id);
+                                setEmployee(updatedEmployee);
+                            } else {
+                                Alert.alert("Thông báo", "Xóa nhân viên thất bại");
+                            }
+                        } catch (error) {
+                            console.log(error);
+                            Alert.alert("Thông báo", "Có lỗi xảy ra khi xóa nhân viên!");
+                        }
+                    }
+                }
+            ]
+        );
+    };
 
     return (
         <View style={styles.container}>
@@ -36,7 +103,7 @@ const EmployeeScreen = ({navigation}: any) => {
                 ) : (
                     <FlatList
                         scrollEnabled={false}
-                        data={data}
+                        data={employee}
                         renderItem={({item}: any) => (
                             <View style={styles.item}>
                                 {/*<Image source={{uri: item.imageUrl}} style={styles.image}/>*/}

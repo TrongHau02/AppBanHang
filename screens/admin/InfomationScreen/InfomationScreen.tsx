@@ -1,19 +1,57 @@
-import React from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5.js";
 import Header from "../../components/Header.tsx";
+import {useFocusEffect} from "@react-navigation/native";
+import CONFIG from "../../../config/config.ts";
+
+type Inf = {
+    id: number,
+    username: string,
+    password: string,
+    fullname: string;
+    address: string,
+    roleId: number
+}
 
 const InformationScreen = ({userData, navigation}: any) => {
-    const UpdateInfor = (userData: any) => {
-        navigation.navigate("UpdateInformation", {userData})
+    const [information, setInformation] = useState<Inf[]>([userData]);
+    const [fullname, setFullName] = useState(userData.fullname);
+    const [username, setUsername] = useState(userData.username);
+    const [address, setAddress] = useState(userData.address);
+    const [password, setPassword] = useState(userData.password);
+
+    const UpdateInfor = (information: any) => {
+        navigation.navigate("UpdateInformation", {information})
     }
+    useEffect(() => {
+        getAPI();
+    }, []);
+
+    const getAPI = async () => {
+        try {
+            const response = await fetch(`${CONFIG.API_BASE_URL}/user/${userData.id}`);
+            const data = await response.json();
+            console.log(data.data);
+            setInformation(data.data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useFocusEffect(
+        useCallback(() => {
+            getAPI();
+        }, [])
+    );
+
 
     return (
         <View style={{margin: 5}}>
             <Header/>
             <View style={{paddingTop: 25}}>
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.btn} onPress={() => UpdateInfor(userData)}>
+                    <TouchableOpacity style={styles.btn} onPress={() => UpdateInfor(information)}>
                         <Text style={styles.textBTN}>Chỉnh sửa</Text>
                     </TouchableOpacity>
                 </View>
@@ -23,15 +61,15 @@ const InformationScreen = ({userData, navigation}: any) => {
                     </View>
                     <View style={styles.inf}>
                         <Text style={styles.textLabel}>Họ và tên:</Text>
-                        <Text style={styles.textInf}>{userData.fullname}</Text>
+                        <Text style={styles.textInf}>{information.fullname}</Text>
                     </View>
                     <View style={styles.inf}>
                         <Text style={styles.textLabel}>Tài khoản:</Text>
-                        <Text style={styles.textInf}>{userData.username}</Text>
+                        <Text style={styles.textInf}>{information.username}</Text>
                     </View>
                     <View style={styles.inf}>
                         <Text style={styles.textLabel}>Địa chỉ:</Text>
-                        <Text style={styles.textInf}>{userData.address}</Text>
+                        <Text style={styles.textInf}>{information.address}</Text>
                     </View>
                 </View>
             </View>

@@ -17,7 +17,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 import CONFIG from "../../../config/config";
 import axios from "axios";
 
-const AddDishScreen = ({ navigation }) => {
+const AddDishScreen = ({ navigation }: any) => {
     const [dishName, setDishName] = useState("");
     const [dishPrice, setDishPrice] = useState("");
     const [imageUri, setImageUri] = useState(null);

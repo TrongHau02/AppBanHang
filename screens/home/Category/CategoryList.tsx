@@ -9,16 +9,23 @@ import {
     TouchableOpacity,
     View
 } from "react-native";
-import AbstractComponent from "../components/AbstractComponent.tsx";
+import AbstractComponent from "../../components/AbstractComponent.tsx";
 import { useFocusEffect } from "@react-navigation/native";
+import CONFIG from "../../../config/config.ts";
+
+type Category = {
+    id: number;
+    name: string;
+    imageUrl: string;
+}
 
 const CategoryList = ({ data, navigation }: any) => {
-    const [category, setCategory] = useState([]);
+    const [category, setCategory] = useState<Category[]>([]);
     const [isLoading, setLoading] = useState(true);
 
     const getAPI = async () => {
         try {
-            const response = await fetch('http://192.168.0.105:8888/api/v1/categorys');
+            const response = await fetch(`${CONFIG.API_BASE_URL}/categorys`);
             const data = await response.json();
             setCategory(data.data);
         } catch (error) {
@@ -106,7 +113,7 @@ const styles = StyleSheet.create({
     },
     categoryList: {
         flexDirection: 'row',
-        justifyContent: 'center'
+        //justifyContent: 'center'
     },
     flatListContent: {
         justifyContent: 'center',

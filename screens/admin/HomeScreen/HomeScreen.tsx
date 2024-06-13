@@ -18,6 +18,7 @@ import AddDishScreen from "../ProductScreen/AddDishScreen.tsx";
 import {UpdateEmployeeScreen} from "../EmployeeScreen/UpdateEmployeeScreen.tsx";
 import {AddEmployeeScreen} from "../EmployeeScreen/AddEmployeeScreen.tsx";
 import {UpdateInformationScreen} from "../InfomationScreen/UpdateInformationScreen.tsx";
+import {UpdateDishScreen} from "../ProductScreen/UpdateDishScreen.tsx";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -79,6 +80,7 @@ const AdminHomeScreen = ({route}: any) => {
                 <Stack.Screen name={"UpdateEmployee"} component={UpdateEmployeeScreen} options={{headerShown: false}}/>
                 <Stack.Screen name={"UpdateCategory"} component={UpdateCategoryScreen} options={{headerShown: false}}/>
                 <Stack.Screen name={"UpdateTable"} component={UpdateTableScreen} options={{headerShown: false}}/>
+                <Stack.Screen name={"UpdateDish"} component={UpdateDishScreen} options={{headerShown: false}}/>
                 <Stack.Screen name={"UpdateInformation"} component={UpdateInformationScreen} options={{headerShown: false}}/>
             </Stack.Navigator>
         </>

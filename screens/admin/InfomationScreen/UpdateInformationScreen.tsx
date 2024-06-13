@@ -1,14 +1,15 @@
 import React, {useState} from "react";
-import {SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {Alert, SafeAreaView, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View} from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
+import CONFIG from "../../../config/config.ts";
 
 export const UpdateInformationScreen = ({route, navigation}: any) => {
-    const {userData} = route.params;
+    const {information} = route.params;
 
-    const [userName, setUserName] = useState(userData.username);
-    const [fullName, setFullName] = useState(userData.fullname);
-    const [password, setPassword] = useState(userData.password);
-    const [address, setAddress] = useState(userData.address);
+    const [userName, setUserName] = useState(information.username);
+    const [fullName, setFullName] = useState(information.fullname);
+    const [password, setPassword] = useState(information.password);
+    const [address, setAddress] = useState(information.address);
 
     const [errorUserName, setErrorUserName] = useState("");
     const [errorFullName, setErrorFullName] = useState("");
@@ -19,8 +20,70 @@ export const UpdateInformationScreen = ({route, navigation}: any) => {
         navigation.goBack();
     };
 
-    const Submit = () => {
+    const Submit = async () => {
+        setErrorFullName("");
+        setErrorPassword("");
+        setErrorAddress("");
 
+        // Validate input
+        let isValid = true;
+        if (fullName.trim() === "") {
+            setErrorFullName("Vui lòng nhập họ tên");
+            isValid = false;
+        }
+        if (password.trim() === "") {
+            setErrorPassword("Vui lòng nhập tài khoản");
+            isValid = false;
+        }
+        if (address.trim() === "") {
+            setErrorAddress("Vui lòng nhập địa chỉ");
+            isValid = false;
+        }
+
+        if (!isValid) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`${CONFIG.API_BASE_URL}/user`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: userName,
+                    password: password,
+                    fullname: fullName,
+                    address: address
+                }),
+            });
+
+            const responseData = await response.json();
+
+            if (response.status === 200) {
+                ToastAndroid.showWithGravity(
+                    'Chỉnh sửa thông tin thành công',
+                    ToastAndroid.SHORT,
+                    ToastAndroid.CENTER,
+                );
+                /*setUsername("");
+                setFullName("");
+                setAddress("");*/
+                navigation.goBack();
+            } else {
+                ToastAndroid.showWithGravity(
+                    responseData.message,
+                    ToastAndroid.SHORT,
+                    ToastAndroid.CENTER,
+                );
+            }
+        } catch (error) {
+            ToastAndroid.showWithGravity(
+                "Đã xảy ra lỗi khi gửi request",
+                ToastAndroid.SHORT,
+                ToastAndroid.CENTER,
+            );
+        }
     };
 
     return (
@@ -33,6 +96,17 @@ export const UpdateInformationScreen = ({route, navigation}: any) => {
                 <Text style={styles.title}>Thông tin cá nhân</Text>
                 <View style={styles.inputContainer}>
                     <View>
+                        <Text style={styles.label}>Tài khoản:</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder={userName}
+                            value={userName}
+                            editable={false}
+                            onChangeText={(value) => setUserName(value)}
+                        />
+                        <Text style={{color: 'red'}}>{errorUserName}</Text>
+                    </View>
+                    <View>
                         <Text style={styles.label}>Họ tên:</Text>
                         <TextInput
                             style={styles.input}
@@ -41,16 +115,6 @@ export const UpdateInformationScreen = ({route, navigation}: any) => {
                             onChangeText={(value) => setFullName(value)}
                         />
                         <Text style={{color: 'red'}}>{errorFullName}</Text>
-                    </View>
-                    <View>
-                        <Text style={styles.label}>Tên đăng nhập:</Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder={userName}
-                            value={userName}
-                            onChangeText={(value) => setUserName(value)}
-                        />
-                        <Text style={{color: 'red'}}>{errorUserName}</Text>
                     </View>
                     <View>
                         <Text style={styles.label}>Mật khẩu:</Text>

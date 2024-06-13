@@ -3,7 +3,7 @@ import {StyleSheet} from "react-native";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import AddCategoryScreen from "./screens/admin/Category/AddCategoryScreen.tsx";
 import AdminHomeScreen from "./screens/admin/HomeScreen/HomeScreen.tsx";
-import HomeScreen from "./screens/home/HomeScreen.tsx";
+import HomeScreen from "./screens/home/HomeScreen/HomeScreen.tsx";
 import {NavigationContainer} from "@react-navigation/native";
 import RegisterScreen from "./screens/register/RegisterScreen.tsx";
 import LoginScreen from "./screens/login/LoginScreen.tsx";

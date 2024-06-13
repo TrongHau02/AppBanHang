@@ -1,23 +1,87 @@
 import React, {useState} from "react";
-import {SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {SafeAreaView, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View} from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
+import CONFIG from "../../../config/config.ts";
 
 export const UpdateEmployeeScreen = ({route, navigation}: any) => {
     const {item} = route.params;
     const [fullName, setFullName] = useState(item.fullname);
     const [address, setAddress] = useState(item.address);
     const [userName, setUserName] = useState(item.username);
+    const [password, setPassword] = useState(item.password);
 
     const [errorFullName, setErrorFullName] = useState("");
     const [errorAddress, setErrorAddress] = useState("");
-    const [errorUserName, setErrorUserName] = useState("");
+    const [errorPassword, setErrorPassword] = useState("");
 
     const PageBack = () => {
         navigation.goBack();
     }
 
-    const Submit = () => {
+    const Submit = async () => {
+        setErrorFullName("");
+        setErrorPassword("");
+        setErrorAddress("");
 
+        // Validate input
+        let isValid = true;
+        if (fullName.trim() === "") {
+            setErrorFullName("Vui lòng nhập họ tên");
+            isValid = false;
+        }
+        if (password.trim() === "") {
+            setErrorPassword("Vui lòng nhập tài khoản");
+            isValid = false;
+        }
+        if (address.trim() === "") {
+            setErrorAddress("Vui lòng nhập địa chỉ");
+            isValid = false;
+        }
+
+        if (!isValid) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`${CONFIG.API_BASE_URL}/user`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: userName,
+                    password: password,
+                    fullname: fullName,
+                    address: address
+                }),
+            });
+
+            const responseData = await response.json();
+
+            if (response.status === 200) {
+                ToastAndroid.showWithGravity(
+                    'Chỉnh sửa thông tin nhân viên thành công',
+                    ToastAndroid.SHORT,
+                    ToastAndroid.CENTER,
+                );
+                /*setUsername("");
+                setFullName("");
+                setAddress("");*/
+                navigation.goBack();
+            } else {
+                ToastAndroid.showWithGravity(
+                    responseData.message,
+                    ToastAndroid.SHORT,
+                    ToastAndroid.CENTER,
+                );
+            }
+        } catch (error) {
+            ToastAndroid.showWithGravity(
+                "Đã xảy ra lỗi khi gửi request",
+                ToastAndroid.SHORT,
+                ToastAndroid.CENTER,
+            );
+        }
     }
 
     return (
@@ -30,6 +94,16 @@ export const UpdateEmployeeScreen = ({route, navigation}: any) => {
                 <Text style={styles.title}>Thông tin nhân viên</Text>
                 <View style={styles.inputContainer}>
                     <View>
+                        <Text style={styles.label}>Tài khoản:</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder={userName}
+                            value={userName}
+                            editable={false} //khng cho chỉnh sửa data
+                            onChangeText={(value) => setUserName(value)}
+                        />
+                    </View>
+                    <View>
                         <Text style={styles.label}>Tên nhân viên:</Text>
                         <TextInput
                             style={styles.input}
@@ -40,14 +114,14 @@ export const UpdateEmployeeScreen = ({route, navigation}: any) => {
                         <Text style={{color: 'red'}}>{errorFullName}</Text>
                     </View>
                     <View>
-                        <Text style={styles.label}>Tên đăng nhập:</Text>
+                        <Text style={styles.label}>Mật khẩu:</Text>
                         <TextInput
                             style={styles.input}
-                            placeholder={userName}
-                            value={userName}
-                            onChangeText={(value) => setUserName(value)}
+                            placeholder={password}
+                            value={password}
+                            onChangeText={(value) => setPassword(value)}
                         />
-                        <Text style={{color: 'red'}}>{errorUserName}</Text>
+                        <Text style={{color: 'red'}}>{errorPassword}</Text>
                     </View>
                     <View>
                         <Text style={styles.label}>Địa chỉ:</Text>
