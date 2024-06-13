@@ -61,15 +61,15 @@ const InformationScreen = ({userData, navigation}: any) => {
                     </View>
                     <View style={styles.inf}>
                         <Text style={styles.textLabel}>Họ và tên:</Text>
-                        <Text style={styles.textInf}>{information.fullname}</Text>
+                        <Text style={styles.textInf}>{fullname}</Text>
                     </View>
                     <View style={styles.inf}>
                         <Text style={styles.textLabel}>Tài khoản:</Text>
-                        <Text style={styles.textInf}>{information.username}</Text>
+                        <Text style={styles.textInf}>{username}</Text>
                     </View>
                     <View style={styles.inf}>
                         <Text style={styles.textLabel}>Địa chỉ:</Text>
-                        <Text style={styles.textInf}>{information.address}</Text>
+                        <Text style={styles.textInf}>{address}</Text>
                     </View>
                 </View>
             </View>

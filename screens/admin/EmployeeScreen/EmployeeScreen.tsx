@@ -1,15 +1,5 @@
 import React, {useCallback, useEffect, useState} from "react";
-import {
-    ActivityIndicator,
-    Alert,
-    FlatList,
-    Image,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
-} from "react-native";
+import {ActivityIndicator, Alert, FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import Header from "../../components/Header.tsx";
 import AbstractComponent from "../../components/AbstractComponent.tsx";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -17,15 +7,18 @@ import Icons from "react-native-vector-icons/FontAwesome";
 import CONFIG from "../../../config/config.ts";
 import {useFocusEffect} from "@react-navigation/native";
 
+type Employee = {
+    id: number,
+    username: string,
+    password: string,
+    fullname: string,
+    address: string,
+    roleId: number
+}
+
 const EmployeeScreen = ({navigation}: any) => {
     const [isLoading, setLoading] = useState(false);
-    const [employee, setEmployee] = useState([]);
-
-    const data = [
-        {id: 1, "username": "nguyenvana", "password": "123456", "fullname": "Nguyễn Văn A", "address": "Tp.Hồ Chí Minh"},
-        {id: 2, "username": "nguyenvanb", "password": "123456", "fullname": "Nguyễn Văn B", "address": "Tp.Hồ Chí Minh"},
-        {id: 3, "username": "nguyenvanc", "password": "123456", "fullname": "Nguyễn Văn C", "address": "Tp.Hồ Chí Minh"},
-    ]
+    const [employee, setEmployee] = useState<Employee[]>([]);
 
     const getAPI = async () => {
         try {
@@ -106,7 +99,6 @@ const EmployeeScreen = ({navigation}: any) => {
                         data={employee}
                         renderItem={({item}: any) => (
                             <View style={styles.item}>
-                                {/*<Image source={{uri: item.imageUrl}} style={styles.image}/>*/}
                                 <Icons name={'user'} style={styles.icon}/>
                                 <Text style={styles.title}>{item.fullname}</Text>
                                 <View style={styles.groupBTN}>

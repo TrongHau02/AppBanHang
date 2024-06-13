@@ -1,6 +1,12 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
+type AbstractComponentProps = {
+    title: string;
+    textBTN?: string | null;
+    onAddPress?: () => void;
+}
+
 const AbstractComponent = ({ title, textBTN, onAddPress }: AbstractComponentProps) => {
     return (
         <View style={styles.container}>
