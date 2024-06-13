@@ -56,8 +56,14 @@ export const PaymentDetail = ({navigation, route}: any) => {
             <View style={styles.content}>
                 <Text style={{color: 'black', fontSize: 40, textAlign: "center"}}>Chi tiết hóa đơn</Text>
                 <View style={styles.detailSection}>
-                    <Text style={styles.detailText}>Tên bàn ăn: {item.tableName}</Text>
-                    <Text style={styles.detailText}>Tên nhân viên phục vụ: {item.userId}</Text>
+                    <View style={{flexDirection: "row", alignItems: "baseline"}}>
+                        <Text style={styles.label}>Tên bàn ăn:</Text>
+                        <Text style={styles.detailText}>{item.tableName}</Text>
+                    </View>
+                    <View style={{flexDirection: "row", alignItems: "baseline"}}>
+                        <Text style={styles.label}>Tên nhân viên phục vụ:</Text>
+                        <Text style={styles.detailText}>{item.userFullName}</Text>
+                    </View>
                 </View>
                 <View style={styles.tableContainer}>
                     <View style={styles.tableHeader}>
@@ -105,7 +111,9 @@ const styles = StyleSheet.create({
         marginVertical: 10,
     },
     detailText: {
-        fontSize: 18,
+        marginStart: 5,
+        color: "black",
+        fontSize: 20,
         marginBottom: 5,
     },
     tableContainer: {
@@ -125,6 +133,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
         textAlign: 'center',
+        color: "black"
     },
     tableRow: {
         flexDirection: 'row',
@@ -134,6 +143,7 @@ const styles = StyleSheet.create({
         flex: 1,
         fontSize: 16,
         textAlign: 'center',
+        color: "black"
     },
     tableFooter: {
         flexDirection: 'row',
@@ -147,6 +157,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
         textAlign: 'center',
+        color: 'black'
     },
     paymentButton: {
         marginTop: 20,
@@ -176,4 +187,10 @@ const styles = StyleSheet.create({
         color: '#007BFF',
         marginLeft: 5,
     },
+    label: {
+        color: 'black',
+        fontSize: 20,
+        fontWeight: "bold"
+    }
+
 });

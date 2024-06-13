@@ -21,7 +21,8 @@ type Payment = {
     tableId: number,
     tableName: string,
     totalAmount: number,
-    dishs: Dishs[]
+    dishs: Dishs[],
+    userFullName: string
 }
 
 export const PaymentScreen = ({navigation}: any) => {
